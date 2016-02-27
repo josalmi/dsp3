@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DSP3</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Awesome calculator</h1>
+    </div>
+
+    <div>
+        <div class="form-group">
+            <label class="sr-only" for="input">Calculate</label>
+            <input class="form-control" id="input" type="text" placeholder="Calculate something">
+        </div>
+        <button class="btn btn-success" id="calculateButton" type="button" onclick="app.calculate(input.value)">
+            Calculate
+        </button>
+    </div>
+
+    <div id="results">
+        <h2>Results</h2>
+    </div>
+
+    <div>
+        <h2>Sine plotting</h2>
+        <canvas id="canvas" width="300" height="300"></canvas>
+
+        <div class="input-group">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="sineMode">
+                    Calculate and plot on server
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="sineMode">
+                    Calculate and plot on client
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="sineMode">
+                    Calculate on server and plot on client
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+
+</body>
+</html>
