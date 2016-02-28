@@ -10,9 +10,44 @@ function addResult(result) {
   $("#results").append(e)
 }
 
-function parse(query) {
-  // TODO: Parse query into array of { arg1, arg2, op } triplets
-  console.log(query);
+function parseSine(str) {
+  return str.match("(sin|cos|tan)");
+}
+
+function parseOp(op) {
+  return op.match(/[+-/*]/);
+}
+
+function pushNonEmpty(a, s) {
+  if (s.length > 0) a.push(s)
+}
+
+function parse(str) {
+  var sine = parseSine(str);
+  if (sine) return [{op: sine[0]}];
+
+  var terms = [];
+  var term = "";
+
+  for (var i = 0; i < str.length; ++i) {
+    var c = str[i];
+
+    if ($.isNumeric(c)) {
+      term += c;
+    }
+
+    if (parseOp(c)) {
+      pushNonEmpty(terms, term);
+      terms.push(c);
+      term = "";
+    }
+  }
+
+  pushNonEmpty(terms, term);
+
+  console.log(terms);
+  console.log(str);
+
   return {arg1: '1', arg2: '2', op: '+'}
 }
 
@@ -25,12 +60,12 @@ function sendQuery(params) {
   });
 }
 
-function calculate(query) {
-  var params = parse(query);
+function calculate(str) {
+  var params = parse(str.trim());
 
   sendQuery(params).done(function (resp) {
     console.log(resp);
-    addResult(query + " = " + resp);
+    addResult(str + " = " + resp);
   });
 }
 
