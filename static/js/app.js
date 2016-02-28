@@ -44,11 +44,7 @@ function parse(str) {
   }
 
   pushNonEmpty(terms, term);
-
-  console.log(terms);
-  console.log(str);
-
-  return {arg1: '1', arg2: '2', op: '+'}
+  return terms;
 }
 
 function sendQuery(params) {
@@ -60,13 +56,21 @@ function sendQuery(params) {
   });
 }
 
-function calculate(str) {
-  var params = parse(str.trim());
+function calculateRec(arg1, op, arg2, terms) {
+  console.log("arg1: " + arg1 + " arg2: " + arg2 + " op: " + op);
+  console.log("terms: " + terms);
 
-  sendQuery(params).done(function (resp) {
+  sendQuery({arg1: arg1, arg2: arg2, op: op}).done(function (resp) {
     console.log(resp);
-    addResult(str + " = " + resp);
+    addResult(arg1 + op + arg2 + " = " + resp);
+
+    calculateRec(resp, terms.shift(), terms.shift(), terms);
   });
+}
+
+function calculate(str) {
+  var terms = parse(str.trim());
+  calculateRec(terms.shift(), terms.shift(), terms.shift(), terms);
 }
 
 $(document).ready(function () {
