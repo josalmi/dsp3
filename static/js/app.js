@@ -24,7 +24,7 @@ function pushNonEmpty(a, s) {
 
 function parse(str) {
   var sine = parseSine(str);
-  if (sine) return [{op: sine[0]}];
+  if (sine) return [sine[0]];
 
   var terms = [];
   var term = "";
@@ -64,12 +64,17 @@ function calculateRec(arg1, op, arg2, terms) {
     console.log(resp);
     addResult(arg1 + op + arg2 + " = " + resp);
 
+    if(terms.length < 2) return;
+
     calculateRec(resp, terms.shift(), terms.shift(), terms);
   });
 }
 
 function calculate(str) {
   var terms = parse(str.trim());
+  if(terms.length < 3) return;
+
+  $("#results").children("p").remove();
   calculateRec(terms.shift(), terms.shift(), terms.shift(), terms);
 }
 
