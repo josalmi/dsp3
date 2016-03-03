@@ -13,17 +13,20 @@ var app = (function () {
     $("#results").children("p").remove();
   }
 
-  function calculate(arg1, op, arg2, terms) {
-    console.log("arg1: " + arg1 + " arg2: " + arg2 + " op: " + op);
-    console.log("terms: " + terms);
+  function calculate(terms, cb) {
+    if (terms.length < 3) return;
+
+    var arg1 = terms.shift();
+    var op = terms.shift();
+    var arg2 = terms.shift();
 
     remote.calculate(arg1, op, arg2).done(function (resp) {
-      console.log(resp);
-      addResult(arg1 + op + arg2 + " = " + resp);
+      if (cb) {
+        cb(arg1, op, arg2, resp, terms.length);
+      }
 
-      if (terms.length < 2) return;
-
-      calculate(resp, terms.shift(), terms.shift(), terms);
+      terms.unshift(resp);
+      calculate(terms, cb);
     });
   }
 
@@ -32,28 +35,23 @@ var app = (function () {
     if (terms.length < 3) return;
 
     clearResults();
-    calculate(terms.shift(), terms.shift(), terms.shift(), terms);
+    calculate(terms, function (arg1, op, arg2, resp) {
+      addResult(arg1 + op + arg2 + " = " + resp);
+    });
   }
 
   return {
-    calculate: parseAndCalculate
+    addResult: addResult,
+    calculate: calculate,
+    parseAndCalculate: parseAndCalculate
   }
 })();
 
-
-function sine(x, degree) {
-  var val = 0.0;
-  var pos = true;
-
-  for (var i = 1; i <= degree; i += 2) {
-    var term = (pow(x, i) / factorial(i)) * (pos ? 1.0 : -1.0);
-
-    pos = !pos;
-    val += term;
-  }
-
-  return val;
-}
-
 $(document).ready(function () {
+  console.log(sine.sine(2, 15));
+  sine.remoteSine(2, 15, function (arg1, op, arg2, resp, len) {
+    if (len == 0) {
+      app.addResult("sine(2) ~ " + resp);
+    }
+  });
 });
