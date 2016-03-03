@@ -1,83 +1,59 @@
 'use strict';
 
-var app = {};
+var app = (function () {
+  function addResult(result) {
+    var e = $("<p/>",
+      {text: result}
+    );
 
-function addResult(result) {
-  var e = $("<p/>",
-    {text: result}
-  );
-
-  $("#results").append(e)
-}
-
-function parseSine(str) {
-  return str.match("(sin|cos|tan)");
-}
-
-function parseOp(op) {
-  return op.match(/[+-/*]/);
-}
-
-function pushNonEmpty(a, s) {
-  if (s.length > 0) a.push(s)
-}
-
-function parse(str) {
-  var sine = parseSine(str);
-  if (sine) return [sine[0]];
-
-  var terms = [];
-  var term = "";
-
-  for (var i = 0; i < str.length; ++i) {
-    var c = str[i];
-
-    if ($.isNumeric(c)) {
-      term += c;
-    }
-
-    if (parseOp(c)) {
-      pushNonEmpty(terms, term);
-      terms.push(c);
-      term = "";
-    }
+    $("#results").append(e)
   }
 
-  pushNonEmpty(terms, term);
-  return terms;
-}
+  function clearResults() {
+    $("#results").children("p").remove();
+  }
 
-function sendQuery(params) {
-  return $.get({
-    url: "/calc",
-    data: params
-  }).fail(function () {
-    console.log("Ajax request failed.")
-  });
-}
+  function calculate(arg1, op, arg2, terms) {
+    console.log("arg1: " + arg1 + " arg2: " + arg2 + " op: " + op);
+    console.log("terms: " + terms);
 
-function calculateRec(arg1, op, arg2, terms) {
-  console.log("arg1: " + arg1 + " arg2: " + arg2 + " op: " + op);
-  console.log("terms: " + terms);
+    remote.calculate(arg1, op, arg2).done(function (resp) {
+      console.log(resp);
+      addResult(arg1 + op + arg2 + " = " + resp);
 
-  sendQuery({arg1: arg1, arg2: arg2, op: op}).done(function (resp) {
-    console.log(resp);
-    addResult(arg1 + op + arg2 + " = " + resp);
+      if (terms.length < 2) return;
 
-    if(terms.length < 2) return;
+      calculate(resp, terms.shift(), terms.shift(), terms);
+    });
+  }
 
-    calculateRec(resp, terms.shift(), terms.shift(), terms);
-  });
-}
+  function parseAndCalculate(str) {
+    var terms = parser.parse(str.trim());
+    if (terms.length < 3) return;
 
-function calculate(str) {
-  var terms = parse(str.trim());
-  if(terms.length < 3) return;
+    clearResults();
+    calculate(terms.shift(), terms.shift(), terms.shift(), terms);
+  }
 
-  $("#results").children("p").remove();
-  calculateRec(terms.shift(), terms.shift(), terms.shift(), terms);
+  return {
+    calculate: parseAndCalculate
+  }
+})();
+
+
+function sine(x, degree) {
+  var val = 0.0;
+  var pos = true;
+
+  for (var i = 1; i <= degree; i += 2) {
+    var term = (pow(x, i) / factorial(i)) * (pos ? 1.0 : -1.0);
+
+    pos = !pos;
+    val += term;
+  }
+
+  return val;
 }
 
 $(document).ready(function () {
-  app.calculate = calculate;
 });
