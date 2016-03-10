@@ -7,7 +7,7 @@ var sine = (function (calculate) {
     return factorial(x - 1) * x;
   }
 
-  function sine(x, degree) {
+  function localSine(x, degree, cb) {
     var val = 0.0;
     var pos = true;
 
@@ -18,7 +18,7 @@ var sine = (function (calculate) {
       val += term;
     }
 
-    return val;
+    cb(val);
   }
 
   function allPromises(a) {
@@ -37,13 +37,13 @@ var sine = (function (calculate) {
       promises.push(remote.calculate(i, 'fac'));
     }
 
-    allPromises(promises).then(function (res) {
+    Promise.all(promises).then(function (res) {
       var terms = [];
       for (var i = 0; i < res.length; i += 2) {
         terms.push(remote.calculate(res[i], '/', res[i + 1]));
       }
 
-      return allPromises(terms);
+      return Promise.all(terms);
     }).then(function (terms) {
       var pos = false;
 
@@ -56,8 +56,61 @@ var sine = (function (calculate) {
     });
   }
 
+  function drawPoint(ctx, x, y) {
+    var xScale = Math.floor(canvas.width / 6.3);
+    var yScale = 125;
+    var pointSize = 5;
+    ctx.fillRect(canvas.width / 2 + x * xScale, canvas.height / 2 + -y * yScale, pointSize, pointSize);
+  }
+
+  function plotLocal(calculateLocally, ctx) {
+    var sineCalculator;
+    if (calculateLocally) {
+      sineCalculator = function(x, degree, cb) {
+        localSine(x, degree, function(y) {
+          cb(x, y);
+        });
+      }
+    } else {
+       sineCalculator = function(x, degree, cb) {
+        remoteSine(x, degree, function(arg1, op, arg2, y, terms) {
+          if (terms.length > 0) {
+            return;
+          }
+          cb(x, y);
+        });
+      }
+    }
+    for (var i = -Math.PI; i <= Math.PI; i += 0.1) {
+      sineCalculator(i, 15, function(x, y) {
+        drawPoint(ctx, x, y);
+      });
+    }
+  }
+
+  function plotRemote(ctx) {
+    var drawing = new Image();
+    drawing.src = '/sine';
+    drawing.onload = function() {
+       ctx.drawImage(drawing,0,0);
+    };
+  }
+
+  function plot() {
+    var mode = $("input[name='sineMode']:checked").val();
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (mode === 'remotePlot') {
+      plotRemote(ctx);
+    } else {
+      var mode = $("input[name='sineMode']:checked").val();
+      var calculateLocally = mode === 'localCalculate';
+      plotLocal(calculateLocally, ctx);
+    }
+  }
+
   return {
-    remoteSine: remoteSine,
-    sine: sine
+    plot,
   }
 })(app.calculate);

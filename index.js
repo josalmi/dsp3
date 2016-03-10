@@ -1,6 +1,7 @@
 'use strict';
 
 var restify = require('restify');
+var exec = require('child_process').exec;
 
 function pow(x, n) {
   if (n == 0) return 1.0;
@@ -59,6 +60,13 @@ var server = restify.createServer({});
 server.use(restify.queryParser());
 
 server.get('/calc', respond);
+server.get('/sine', function(req, res, next) {
+  exec('gnuplot -e "set terminal png size 300, 300; set xrange [-3.14:3.14]; unset border; unset ytics; unset key; plot sin(x);"', { encoding: 'binary' }, function(err, stdout) {
+    res.writeHead(200, {'Content-Type': 'image/png' });
+    res.end(stdout, 'binary');
+      return next();
+    });
+});
 server.get(/.*/, restify.serveStatic({
   directory: __dirname + '/static',
   default: 'index.html'
