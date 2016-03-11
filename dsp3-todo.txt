@@ -1,0 +1,9 @@
+- Possibly missing cos(x) and tan(x) and sin(x), where x is a number.
+- Are pow and factorial operations allowed?
+- IE support?
+
+- Refresh already existing cache entries instead of duplicating them. **
+- Fix simplify button behavior (never send calculations to the server) **
+
+- Document who did what (shared document) **
+- Document how this program works **
