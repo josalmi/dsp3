@@ -49,6 +49,18 @@ var app = (function () {
   }
 
   function parseAndCalculate(str) {
+    sine.remoteSine(2, 15, function(res) {
+      console.log(res)
+    });
+    /*
+    var res = sine.remotePow(2, 8, 0, 1).then(function(res) {
+      console.log("lol:" + res);
+    });
+
+    console.log(res);
+    return;
+    */
+
     if(/(sin|cos|tan)/.test(str)) {
       console.log(str);
       sine.plot(str);
