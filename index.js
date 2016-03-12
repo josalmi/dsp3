@@ -3,23 +3,6 @@
 var restify = require('restify');
 var exec = require('child_process').exec;
 
-function pow(x, n) {
-  if (n == 0) return 1.0;
-
-  var val = 1.0;
-  for (var i = 0; i < n; ++i) {
-    val = val * x;
-  }
-
-  return val;
-}
-
-function factorial(x) {
-  if (x == 0) return 1.0;
-
-  return factorial(x - 1) * x;
-}
-
 var operators = {
   '+': function (arg1, arg2) {
     return arg1 + arg2;
@@ -32,12 +15,6 @@ var operators = {
   },
   '/': function (arg1, arg2) {
     return arg1 / arg2;
-  },
-  'fac': function (arg1) {
-    return factorial(arg1);
-  },
-  'pow': function (arg1, arg2) {
-    return pow(arg1, arg2);
   }
 };
 
