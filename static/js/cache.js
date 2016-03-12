@@ -13,7 +13,9 @@ var cache = (function () {
 
   function calculate(...args) {
     var value = cachedOperationsMap.get(constructKey(...args));
-    save(...args, value);
+    if (value !== undefined) {
+      save(...args, value);
+    }
     return value;
   }
 
