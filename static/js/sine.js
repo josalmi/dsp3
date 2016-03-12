@@ -23,15 +23,15 @@ var sine = (function (calculate) {
 
   function remotePow(x, n, c, res) {
     if(n == 0) {
-      return 1;
+      return Promise.resolve(1);
     }
 
     if(n == 1) {
-      return x;
+      return Promise.resolve(x);
     }
 
     if(c == n) {
-      return res;
+      return Promise.resolve(res);
     }
 
     return remote.calculate(res, '*', x).then(function(result) {
@@ -39,13 +39,22 @@ var sine = (function (calculate) {
     });
   }
 
+  function remoteFactorial(x, res) {
+    if (x == 0) return Promise.resolve(1.0);
+
+    return remote.calculate(res, '*', x).then(function(result) {
+      if(x == 1) return Promise.resolve(res);
+
+      return remoteFactorial(x - 1, result)
+    });
+  }
+
   function remoteSine(x, degree, cb) {
     var promises = [];
 
     for (var i = 1; i <= degree; i += 2) {
-      //promises.push(remote.calculate(x, 'pow', i));
-      promises.push(remotePow(x, i, 0, 1));
-      promises.push(remote.calculate(i, 'fac'));
+      promises.push(remotePow(x, i, 0, 1.0));
+      promises.push(remoteFactorial(i, 1.0));
     }
 
     Promise.all(promises).then(function (res) {
@@ -121,8 +130,6 @@ var sine = (function (calculate) {
   }
 
   return {
-    plot,
-    remotePow,
-    remoteSine
+    plot
   }
 })(app.calculate);

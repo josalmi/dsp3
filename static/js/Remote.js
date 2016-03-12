@@ -11,8 +11,14 @@ var remote = (function (cache) {
   }
 
   function calculate(arg1, op, arg2) {
+    var cachedResult = cache.calculate(arg1, op, arg2);
+
+    if(cachedResult !== undefined) {
+      return Promise.resolve(cachedResult);
+    }
+
     var remotePromise = sendRequest({arg1: arg1, op: op, arg2: arg2});
-    return new Promise(function(resolve, reject) {;
+    return new Promise(function(resolve, reject) {
       remotePromise.done(function(value) {
         cache.save(arg1, op, arg2, value);
         resolve(value);

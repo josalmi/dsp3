@@ -43,6 +43,6 @@ var cache = (function () {
   return {
     calculate: calculate,
     save: save,
-    changeSize: changeSize,
+    changeSize: changeSize
   }
 })();
