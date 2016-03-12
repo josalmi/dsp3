@@ -11,10 +11,6 @@ var remote = (function (cache) {
   }
 
   function calculate(arg1, op, arg2) {
-    var cacheResult = cache.calculate(arg1, op, arg2);
-    if (cacheResult !== undefined) {
-      return Promise.resolve(cacheResult);
-    }
     var remotePromise = sendRequest({arg1: arg1, op: op, arg2: arg2});
     return new Promise(function(resolve, reject) {;
       remotePromise.done(function(value) {

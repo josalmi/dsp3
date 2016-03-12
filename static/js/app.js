@@ -13,12 +13,22 @@ var app = (function () {
     $("#results").children("p").remove();
   }
 
+  function simplifyNext(arg1, op, arg2) {
+    return cache.calculate(arg1, op, arg2);
+  }
+
   function calculateNext(terms, cb) {
     if (terms.length < 3) return;
 
     var arg1 = terms.shift();
     var op = terms.shift();
     var arg2 = terms.shift();
+
+    var cacheResult = simplifyNext(arg1, op, arg2);
+    if (cacheResult !== undefined) {
+     cb(arg1, op, arg2, cacheResult, terms);
+     return;
+    }
 
     remote.calculate(arg1, op, arg2).then(function (resp) {
       if (cb) {
@@ -53,18 +63,18 @@ var app = (function () {
     });
   }
 
-  function simplifyParsed(terms, cb) {
-    calculateNext(terms, function (arg1, op, arg2, resp, terms) {
-      addResult(arg1 + op + arg2 + " = " + resp);
-      cb(terms, resp);
-    });
-  }
-
   function simplify(str) {
     var terms = parser.parse(str.trim());
-    simplifyParsed(terms, function (terms, resp) {
-      input.value = [resp, terms.join(' ')].filter(Boolean).join(' ');
-    })
+    if (terms.length < 3) return;
+    var arg1 = terms.shift();
+    var op = terms.shift();
+    var arg2 = terms.shift();
+
+    var value = simplifyNext(arg1, op, arg2);
+    if (value !== undefined) {
+      addResult(arg1 + op + arg2 + " = " + value);
+      input.value = [value, terms.join(' ')].filter(Boolean).join(' ');
+    }
   }
 
   return {
