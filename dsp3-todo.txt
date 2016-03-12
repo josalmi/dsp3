@@ -1,9 +1,0 @@
-- Refresh already existing cache entries instead of duplicating them. **
-- Fix simplify button behavior (never send calculations to the server) **
-- Send the whole line containing sin|tan|cos to SERVER and do parsing there. **
-
-- Are pow and factorial operations allowed? (STILL unclear even after Jussi replied)
-
-
-- Document who did what (shared document) **
-- Document how this program works **
