@@ -26,12 +26,20 @@ var remote = (function (cache) {
     });
   }
 
+  function calculateLazy(...args) {
+    return function() {
+      return calculate(...args);
+    };
+  }
+
+
   function sine() {
     return '/sine'
   }
 
   return {
     calculate: calculate,
-    sine: sine
+    calculateLazy: calculateLazy,
+    sine: sine,
   }
 })(cache);

@@ -22,31 +22,49 @@ var sine = (function (calculate) {
   }
 
   function remotePow(x, n, c, res) {
-    if(n == 0) {
-      return Promise.resolve(1);
-    }
+    return function() {
+      if(n == 0) {
+        return Promise.resolve(1);
+      }
 
-    if(n == 1) {
-      return Promise.resolve(x);
-    }
+      if(n == 1) {
+        return Promise.resolve(x);
+      }
 
-    if(c == n) {
-      return Promise.resolve(res);
-    }
+      if(c == n) {
+        return Promise.resolve(res);
+      }
 
-    return remote.calculate(res, '*', x).then(function(result) {
-      return remotePow(x, n, c + 1, result)
-    });
+      return remote.calculate(res, '*', x).then(function(result) {
+        return remotePow(x, n, c + 1, result)();
+      });
+    }
   }
 
   function remoteFactorial(x, res) {
-    if (x == 0) return Promise.resolve(1.0);
+    return function() {
+      if (x == 0) return Promise.resolve(1.0);
+      if (x == 1) return Promise.resolve(res);
 
-    return remote.calculate(res, '*', x).then(function(result) {
-      if(x == 1) return Promise.resolve(res);
+      return remote.calculate(res, '*', x).then(function(result) {
+        return remoteFactorial(x - 1, result)();
+      });
+    }
+  }
 
-      return remoteFactorial(x - 1, result)
+  function promiseAllOrdered(promises, index = 0) {
+    if (index == promises.length) {
+      return Promise.resolve([]);
+    }
+    return new Promise(function(resolve, reject) {
+      promises[index]().then(function(value) {
+        promiseAllOrdered(promises, ++index).then(function(res) {
+          res.unshift(value);
+          resolve(res);
+        }); 
+      });
     });
+    
   }
 
   function remoteSine(x, degree, cb) {
@@ -57,13 +75,13 @@ var sine = (function (calculate) {
       promises.push(remoteFactorial(i, 1.0));
     }
 
-    Promise.all(promises).then(function (res) {
+    promiseAllOrdered(promises).then(function (res) {
       var terms = [];
       for (var i = 0; i < res.length; i += 2) {
-        terms.push(remote.calculate(res[i], '/', res[i + 1]));
+        terms.push(remote.calculateLazy(res[i], '/', res[i + 1]));
       }
 
-      return Promise.all(terms);
+      return promiseAllOrdered(terms);
     }).then(function (terms) {
       var pos = false;
 
@@ -101,11 +119,16 @@ var sine = (function (calculate) {
         });
       }
     }
-    for (var i = -Math.PI; i <= Math.PI; i += 0.1) {
+    function calculateRange(i, n, step, cb) {
+      if (i > n) return;
       sineCalculator(i, 15, function(x, y) {
-        drawPoint(ctx, x, y);
+        cb(x, y);
+        calculateRange(i + step, n, step, cb);
       });
     }
+    calculateRange(-Math.PI, Math.PI, 0.1, function(x, y) {
+      drawPoint(ctx, x, y);
+    });
   }
 
   function plotRemote(ctx, str) {
