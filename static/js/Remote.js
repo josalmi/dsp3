@@ -26,6 +26,6 @@ var remote = (function (cache) {
 
   return {
     calculate: calculate,
-    sine: sine,
+    sine: sine
   }
 })(cache);

@@ -49,12 +49,13 @@ var app = (function () {
   }
 
   function parseAndCalculate(str) {
-    var terms = parser.parse(str.trim());
-
-    if (terms.length === 1 && terms[0] === 'sin') {
-      sine.plot();
+    if(/(sin|cos|tan)/.test(str)) {
+      console.log(str);
+      sine.plot(str);
       return;
     }
+
+    var terms = parser.parse(str.trim());
     if (terms.length < 3) return;
 
     clearResults();
@@ -65,6 +66,7 @@ var app = (function () {
 
   function simplify(str) {
     var terms = parser.parse(str.trim());
+
     if (terms.length < 3) return;
     var arg1 = terms.shift();
     var op = terms.shift();
@@ -81,6 +83,6 @@ var app = (function () {
     addResult: addResult,
     calculate: calculate,
     parseAndCalculate: parseAndCalculate,
-    simplify: simplify,
+    simplify: simplify
   }
 })();

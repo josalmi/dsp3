@@ -88,29 +88,28 @@ var sine = (function (calculate) {
     }
   }
 
-  function plotRemote(ctx) {
+  function plotRemote(ctx, str) {
     var drawing = new Image();
-    drawing.src = '/sine';
+    drawing.src = '/sine?str=' + encodeURIComponent(str);
     drawing.onload = function() {
        ctx.drawImage(drawing,0,0);
     };
   }
 
-  function plot() {
+  function plot(str) {
     var mode = $("input[name='sineMode']:checked").val();
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (mode === 'remotePlot') {
-      plotRemote(ctx);
+      plotRemote(ctx, str);
     } else {
-      var mode = $("input[name='sineMode']:checked").val();
       var calculateLocally = mode === 'localCalculate';
       plotLocal(calculateLocally, ctx);
     }
   }
 
   return {
-    plot,
+    plot
   }
 })(app.calculate);

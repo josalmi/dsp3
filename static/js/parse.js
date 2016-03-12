@@ -6,9 +6,6 @@ var parser = (function () {
   }
 
   function parse(str) {
-    var sine = str.match("(sin|cos|tan)");
-    if (sine) return [sine[0]];
-
     var terms = [];
     var term = "";
 
