@@ -39,7 +39,7 @@ server.use(restify.queryParser());
 server.get('/calc', respond);
 
 server.get('/sine', function(req, res, next) {
-  var cmd = 'gnuplot -e "set terminal png size 300, 300; set xrange [-3.14:3.14]; unset border; unset ytics; unset key; plot ' + req.query.str + ';"';
+  var cmd = 'gnuplot -e "set terminal png size 300, 300; set xrange [-3.14:3.14]; unset border; unset key; plot ' + req.query.str + ';"';
   console.log(cmd);
 
   exec(cmd, { encoding: 'binary' }, function(err, stdout) {
