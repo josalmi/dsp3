@@ -62,7 +62,7 @@
             <label for="cacheSize">Cache size</label>
             <input class="form-control" id="cacheSize" type="number" min="0" placeholder="Cache size" value="100" required>
         </div>
-        <button class="btn btn-success" id="calculateButton" type="button" onclick="if (cacheSize.validity.valid) cache.changeSize(cacheSize.value); else alert(cacheSize.validationMessage);">
+        <button class="btn btn-success" id="cacheButton" type="button" onclick="if (cacheSize.validity.valid) cache.changeSize(cacheSize.value); else alert(cacheSize.validationMessage);">
             Change
         </button>
     </div>
