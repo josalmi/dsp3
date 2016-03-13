@@ -4,11 +4,12 @@ Distributed Systems Project: Assignment 3
 Team
 ----
 Miko Mynttinen, 014242634
-Joni Salmi, x
+Joni Salmi, 014341137
 
 
 Tasks
 -----
+Full history available at https://github.com/josalmi/dsp3
 
 Miko:
 - Cache size / request plot

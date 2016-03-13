@@ -1,5 +1,10 @@
 'use strict';
 
+/* Authors:
+ Miko Mynttinen, 014242634
+ Joni Salmi, 014341137
+ */
+
 var parser = (function () {
   /**
    * Appends only non-empty strings s into the given array a.

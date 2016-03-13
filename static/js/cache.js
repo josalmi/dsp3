@@ -1,5 +1,10 @@
 'use strict';
 
+/* Authors:
+ Miko Mynttinen, 014242634
+ Joni Salmi, 014341137
+ */
+
 var cache = (function () {
   var cachedOperationsMap = new Map();
 
