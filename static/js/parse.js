@@ -1,10 +1,16 @@
 'use strict';
 
 var parser = (function () {
+  /**
+   * Appends only non-empty strings s into the given array a.
+   */
   function pushNonEmpty(a, s) {
     if (s.length > 0) a.push(s);
   }
 
+  /**
+   * Parses the given string str into an array of operators and numeric terms.
+   */
   function parse(str) {
     var terms = [];
     var term = "";

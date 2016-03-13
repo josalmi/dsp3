@@ -14,9 +14,10 @@ Miko:
 - Expression string parsing
 - Factorial, pow, sine calculation
 - HTML
+- Documentation
 
 Joni:
-- Cache, simplification
-- Documentation
+- Cache
 - Server
+- Simplification
 - Sine plotting

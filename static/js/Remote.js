@@ -1,6 +1,9 @@
 'use strict';
 
 var remote = (function (cache) {
+  /**
+   * Sends ajax request to the server.
+   */
   function sendRequest(params) {
     return $.get({
       url: "/calc",
@@ -10,6 +13,9 @@ var remote = (function (cache) {
     });
   }
 
+  /**
+   * Retrieves the given operation result either from the cache or from the server.
+   */
   function calculate(arg1, op, arg2) {
     var cachedResult = cache.calculate(arg1, op, arg2);
 
@@ -26,20 +32,17 @@ var remote = (function (cache) {
     });
   }
 
+  /**
+   * Wraps the async call for lazy evaluation.
+   */
   function calculateLazy(...args) {
     return function () {
       return calculate(...args);
     };
   }
 
-
-  function sine() {
-    return '/sine'
-  }
-
   return {
     calculate: calculate,
-    calculateLazy: calculateLazy,
-    sine: sine,
+    calculateLazy: calculateLazy
   }
 })(cache);

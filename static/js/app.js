@@ -1,6 +1,9 @@
 'use strict';
 
 var app = (function () {
+  /**
+   * Adds the given result to the results div.
+   */
   function addResult(result) {
     var e = $("<p/>",
       {text: result}
@@ -9,14 +12,23 @@ var app = (function () {
     $("#results").append(e)
   }
 
+  /**
+   * Clears results.
+   */
   function clearResults() {
     $("#results").children("p").remove();
   }
 
+  /**
+   * Retrieves the next cache result, if one exists.
+   */
   function simplifyNext(arg1, op, arg2) {
     return cache.calculate(arg1, op, arg2);
   }
 
+  /**
+   * Calculates the next result, if terms has atleast three elements left.
+   */
   function calculateNext(terms, cb) {
     if (terms.length < 3) return;
 
@@ -37,6 +49,9 @@ var app = (function () {
     });
   }
 
+  /**
+   * Recursively calculates the expression represented as an array.
+   */
   function calculate(terms, cb) {
     function calculateCb(arg1, op, arg2, resp, terms) {
       cb(arg1, op, arg2, resp, terms);
@@ -49,6 +64,9 @@ var app = (function () {
     calculateNext(terms, calculateCb);
   }
 
+  /**
+   * Parses the expression and calculates it.
+   */
   function parseAndCalculate(str) {
     if (/(sin|cos|tan)/.test(str)) {
       sine.plot(str);
@@ -64,6 +82,9 @@ var app = (function () {
     });
   }
 
+  /**
+   * Simplifies the expression by fetching the leftmost sub-expression result from the cache.
+   */
   function simplify(str) {
     var terms = parser.parse(str.trim());
 
