@@ -26,8 +26,8 @@ var app = (function () {
 
     var cacheResult = simplifyNext(arg1, op, arg2);
     if (cacheResult !== undefined) {
-     cb(arg1, op, arg2, cacheResult, terms);
-     return;
+      cb(arg1, op, arg2, cacheResult, terms);
+      return;
     }
 
     remote.calculate(arg1, op, arg2).then(function (resp) {
@@ -45,11 +45,12 @@ var app = (function () {
         calculateNext(terms, calculateCb);
       }
     }
+
     calculateNext(terms, calculateCb);
   }
 
   function parseAndCalculate(str) {
-    if(/(sin|cos|tan)/.test(str)) {
+    if (/(sin|cos|tan)/.test(str)) {
       sine.plot(str);
       return;
     }

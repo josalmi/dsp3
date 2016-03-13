@@ -20,7 +20,7 @@ var cache = (function () {
   }
 
   function save(arg1, op, arg2, value) {
-    var key = constructKey(arg1, op, arg2); 
+    var key = constructKey(arg1, op, arg2);
     cachedOperationsMap.delete(key);
     cachedOperationsMap.set(key, value);
     removeOldest();
@@ -28,7 +28,7 @@ var cache = (function () {
 
   function removeOldest() {
     while (cachedOperationsMap.size > cacheSize) {
-     cachedOperationsMap.delete(cachedOperationsMap.keys().next().value); 
+      cachedOperationsMap.delete(cachedOperationsMap.keys().next().value);
     }
   }
 
