@@ -56,9 +56,25 @@ var cache = (function () {
 
   }
 
+  /**
+   * Clears the cache.
+   */
+  function clearCache() {
+    cachedOperationsMap.clear();
+  }
+
+  /**
+   * Returns the cache size.
+   */
+  function getCacheSize() {
+    return cacheSize;
+  }
+
   return {
-    calculate: calculate,
-    save: save,
-    changeSize: changeSize
+    calculate,
+    save,
+    changeSize,
+    clearCache,
+    getCacheSize
   }
 })();

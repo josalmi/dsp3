@@ -100,10 +100,27 @@ var app = (function () {
     }
   }
 
+  var cacheSize = 0;
+  var maxCacheSize = 2000;
+
+  /**
+   * Generates the cache/request graph data.
+   */
+  function generateGraphData() {
+    if (cacheSize > maxCacheSize) return;
+
+    remote.resetRequests();
+    cache.changeSize(cacheSize);
+    cache.clearCache();
+    sine.plot();
+    cacheSize += 1;
+  }
+
   return {
-    addResult: addResult,
-    calculate: calculate,
-    parseAndCalculate: parseAndCalculate,
-    simplify: simplify
+    addResult,
+    calculate,
+    parseAndCalculate,
+    simplify,
+    generateGraphData
   }
 })();

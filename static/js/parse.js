@@ -34,6 +34,6 @@ var parser = (function () {
   }
 
   return {
-    parse: parse
+    parse
   }
 })();

@@ -1,6 +1,6 @@
 'use strict';
 
-var sine = (function (calculate) {
+var sine = (function (calculate, generateGraphData) {
   /**
    * Returns the factorial for x.
    */
@@ -144,6 +144,13 @@ var sine = (function (calculate) {
             return;
           }
           cb(x, y);
+
+          /*
+          if(x >= 3) {
+            console.log(cache.getCacheSize() + "," + remote.getRequests());
+            generateGraphData();
+          }
+          */
         });
       }
     }
@@ -152,7 +159,7 @@ var sine = (function (calculate) {
      * Calculates the sine for the given bounds and step size.
      */
     function calculateRange(i, n, step, cb) {
-      if (i > n) return;
+      if (i >= n) return;
       sineCalculator(i, 15, function (x, y) {
         cb(x, y);
         calculateRange(i + step, n, step, cb);
@@ -194,4 +201,4 @@ var sine = (function (calculate) {
   return {
     plot
   }
-})(app.calculate);
+})(app.calculate, app.generateGraphData);
